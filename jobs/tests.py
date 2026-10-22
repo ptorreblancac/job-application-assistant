@@ -1,5 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from .models import Job
+from jobs.matching import score_role_relevance
 
 class JobListTests(TestCase):
 
@@ -137,3 +138,26 @@ class JobListTests(TestCase):
             response = self.client.get("/jobs/?job_type=Internship&company=Sony")
             self.assertEqual(response.status_code,200)
             self.assertEqual(len(response.json()),0)
+
+class ScoreRoleRelevanceTests(SimpleTestCase):
+
+    def test_case_insensitive_match(self):
+        job_title = "BACKEND DEVELOPER"
+        target_roles = ["Backend Developer"]
+
+        result = score_role_relevance(job_title,target_roles)
+        self.assertEqual(result,30)
+
+    def test_partial_title_match(self):
+        job_title = "Junior Backend Developer"
+        target_roles = ["Software Developer", "Backend Developer", "Data Engineer"]
+
+        result = score_role_relevance(job_title,target_roles)
+        self.assertEqual(result,30)
+
+    def test_no_match(self):
+        job_title = "Senior Data Scientist"
+        target_roles = ["Software Developer", "Backend Developer", "Data Engineer"]
+
+        result = score_role_relevance(job_title,target_roles)
+        self.assertEqual(result,0)

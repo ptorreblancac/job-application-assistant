@@ -1,0 +1,31 @@
+target_role,job_title,expected_relevance
+Junior Software Engineer,Junior Software Engineer,5
+Junior Software Engineer,Graduate Software Engineer,5
+Junior Software Engineer,Junior Backend Engineer,4
+Junior Software Engineer,Senior Software Architect,2
+Junior Software Engineer,Data Analyst,2
+Software Developer,Software Engineer,5
+Software Developer,Application Developer,4
+Software Developer,Web Developer,4
+Software Developer,IT Support Specialist,2
+Graduate Software Engineer,Graduate Software Developer,5
+Graduate Software Engineer,Software Engineering Intern,4
+Backend Developer,Junior Backend Engineer,5
+Backend Developer,API Developer,4
+Backend Developer,Full-Stack Developer,3
+Backend Developer,Frontend Developer,3
+Backend Developer,Data Engineer,3
+Full-Stack Developer,Full-Stack Software Engineer,5
+Full-Stack Developer,Web Application Developer,4
+Full-Stack Developer,Frontend Developer,4
+Full-Stack Developer,Database Administrator,2
+DevOps / Cloud Engineer,Cloud Engineer,5
+DevOps / Cloud Engineer,Site Reliability Engineer,4
+DevOps / Cloud Engineer,Platform Engineer,4
+DevOps / Cloud Engineer,IT Support Technician,2
+Data Engineer,Junior Data Engineer,5
+Data Engineer,Analytics Engineer,4
+Data Engineer,Data Scientist,3
+Data Engineer,Database Administrator,3
+Data Engineer,Business Intelligence Analyst,3
+Data Engineer,Graphic Designer,0
