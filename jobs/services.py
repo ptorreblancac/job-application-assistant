@@ -1,10 +1,11 @@
 from datetime import datetime
-from .models import Job
+from .models import Job, ProfileJobMatch
 from dotenv import load_dotenv
 import requests
 import os
+from .matching import calculate_similarity, predict_relevance
 
-def fetch_adzuna_jobs():
+def fetch_adzuna_jobs(profile):
     load_dotenv()
     app_id = os.getenv("ADZUNA_APP_ID")
     app_key = os.getenv("ADZUNA_APP_KEY")
@@ -13,24 +14,44 @@ def fetch_adzuna_jobs():
     params = {
         "app_id": app_id, 
         "app_key": app_key,
-        "what": "software engineer",
-        "where": "Barcelona",
+        "what": profile.target_role,
         "results_per_page": 10
     }
+
+    if profile.location:
+        params["where"] = profile.location
 
     response = requests.get(url, params=params)
     response.raise_for_status()
     data = response.json()
     return data.get("results", [])
 
-def import_adzuna_jobs():
-    jobs = fetch_adzuna_jobs()
+def import_adzuna_jobs(profile):
+    jobs = fetch_adzuna_jobs(profile)
     created_count = 0
     existing_count = 0
 
     for job in jobs:
         transformed_job = transform_job(job)
-        _, created = save_job(transformed_job)
+        job_object, created = save_job(transformed_job)
+
+        similarity = calculate_similarity(
+            job_object.title,
+            profile.target_role
+        )
+
+        score = predict_relevance(similarity)
+
+        score = round(score)
+
+        ProfileJobMatch.objects.update_or_create(
+            search_profile=profile,
+            job=job_object,
+            defaults={
+                "relevance_score": score
+            }
+        )
+
         if created:
             created_count += 1
         else:

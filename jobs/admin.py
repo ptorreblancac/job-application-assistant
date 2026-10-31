@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Job, SearchProfile, ProfileJobMatch
 
-# Register your models here.
+admin.site.register(Job)
+admin.site.register(SearchProfile)
+admin.site.register(ProfileJobMatch)
