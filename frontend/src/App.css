@@ -63,3 +63,79 @@
 .dashboard-content {
   padding: 32px;
 }
+
+.stats-container {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  flex: 1;
+  padding: 22px;
+}
+
+.stat-title {
+  color: #798da9;
+  font-size: medium;
+}
+
+.stat-value {
+  color: #252a30;
+  font-size: large;
+  font-weight: bold;
+}
+
+.job-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.job-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.job-card-title {
+  font-size: 17px;
+  color: #252a30;
+  margin: 0;
+}
+
+.job-card-match {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.job-card-company {
+  font-size: 14px;
+  color: #64748b;
+  margin: 10px 0 6px;
+}
+
+.job-card-details {
+  font-size: 13px;
+  color: #798da9;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .job-list {
+    grid-template-columns: 1fr;
+  }
+}
