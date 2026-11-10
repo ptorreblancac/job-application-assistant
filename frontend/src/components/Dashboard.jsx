@@ -1,7 +1,30 @@
 import JobCard from "./JobCard"
 import StatCard from "./StatCard"
+import { useState, useEffect } from "react"
+
+const url = "http://127.0.0.1:8000/jobs/"
 
 export default function Dashboard() {
+    const [jobs, setJobs] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    useEffect(() => {
+        fetch(url)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                setJobs(data)
+            })
+            .catch(error => {
+                setError("Unable to load jobs. Please try again later.")
+            })
+            .finally(
+                setLoading(false)
+            )
+
+    }, []); //runs only on the first render
+
     return(
         <section className="dashboard-content">
             <div className="stats-container">
@@ -12,9 +35,30 @@ export default function Dashboard() {
             <section className="recommended-jobs">
                 <h3>Recommended Jobs</h3>
                 <div className="job-list">
-                    <JobCard title="Junior Backend Developer" company="TechCorp" location="Barcelona" workArrangement="Hybrid" employmentType="Full-time" match={92} />
-                    <JobCard title="Graduate Software Engineer" company="CloudTech" location="Barcelona" workArrangement="Remote" employmentType="Full-time" match={88} />
-                    <JobCard title="Frontend Developer" company="Digital Solutions" location="Madrid" workArrangement="On-site" employmentType="Internship" match={85} />
+                    {loading ? (
+                            <p>Loading jobs...</p>
+                        ) : (
+                            error ? (
+                            <p>{error}</p>
+                            ) : (
+                                jobs.length === 0 ? (
+                                <p>No jobs found</p>
+                                
+                                ) : (
+                                    jobs.map(job => (
+                                        <JobCard 
+                                            key={job.id}
+                                            title={job.title} 
+                                            company={job.company} 
+                                            location={job.location} 
+                                            employmentType={job.job_type} 
+                                        />
+                                    ))
+                                )
+                            )
+                            
+                        )
+                    }
                 </div>
  
             </section>
