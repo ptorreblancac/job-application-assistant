@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Job
+from .models import Job, ProfileJobMatch
 
 def job_list(request): 
     job_type = request.GET.get("job_type")
@@ -16,7 +16,17 @@ def job_list(request):
 
     all_jobs = []
     for job in jobs:
-        all_jobs.append({"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type})
+        match = ProfileJobMatch.objects.filter(
+            search_profile_id=1,
+            job=job
+        ).first()
+
+        if match:
+            relevance_score = match.relevance_score
+        else:
+            relevance_score = None
+
+        all_jobs.append({"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type, "relevance_score": relevance_score})
 
     return JsonResponse(data=all_jobs, safe=False)
 

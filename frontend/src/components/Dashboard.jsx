@@ -52,6 +52,7 @@ export default function Dashboard() {
                                             company={job.company} 
                                             location={job.location} 
                                             employmentType={job.job_type} 
+                                            match={job.relevance_score}
                                         />
                                     ))
                                 )
