@@ -10,7 +10,7 @@ export default function Dashboard() {
     const [error, setError] = useState(null)
 
     const sortedJobs = jobs.slice().sort((a,b) => {
-            if (a.date_posted === null && b.date_posted === null) return 0
+            if (a.relevance_score === null && b.relevance_score === null) return 0
             if (a.relevance_score === null) return 1
             if (b.relevance_score === null) return -1
 
