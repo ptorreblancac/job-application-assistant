@@ -53,20 +53,19 @@ export default function Dashboard() {
                 <StatCard title="Saved jobs" value={8} />
                 <StatCard title="Applications" value={3} />
             </div>
-            <section className="recommended-jobs">
-                <h3>Recommended Jobs</h3>
-                <div className="job-list">
-                    {loading ? (
-                            <p>Loading jobs...</p>
-                        ) : (
-                            error ? (
-                            <p>{error}</p>
-                            ) : (
-                                jobs.length === 0 ? (
-                                <p>No jobs found</p>
-                                
-                                ) : (                                   
-                                    sortedJobs.map(job => (
+            <div>
+                {loading ? (
+                    <p>Loading jobs...</p>
+                ) : error ? (
+                    <p>{error}</p>
+                ) : jobs.length === 0 ? (
+                    <p>No jobs found</p>
+                    ) : ( 
+                        <div className="jobs">                              
+                            <section className="recommended-jobs">
+                                <h3>Recommended Jobs</h3>
+                                <div className="job-list">
+                                    {sortedJobs.map(job => (
                                         <JobCard 
                                             key={job.id}
                                             title={job.title} 
@@ -76,48 +75,33 @@ export default function Dashboard() {
                                             match={job.relevance_score}
                                             datePosted={job.date_posted}
                                         />
-                                    ))
-                                )
-                            )
-                            
-                        )
-                    }
-                </div>
- 
-            </section>
+                                    ))}
+                                </div>
+                            </section>
+                            <section className="recent-jobs">
+                                <h3>Recently Posted</h3>
+                                <div className="job-list">
+                                    {recentJobs.map(job => (
+                                        <JobCard 
+                                            key={job.id}
+                                            title={job.title} 
+                                            company={job.company} 
+                                            location={job.location} 
+                                            employmentType={job.job_type} 
+                                            match={job.relevance_score}
+                                            datePosted={job.date_posted}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    )
+                }
+            </div>
 
-            <section className="recent-jobs">
-                <h3>Recently Posted</h3>
-                <div className="job-list">
-                    {loading ? (
-                            <p>Loading jobs...</p>
-                        ) : (
-                            error ? (
-                            <p>{error}</p>
-                            ) : (
-                                jobs.length === 0 ? (
-                                <p>No jobs found</p>
-                                
-                                ) : (                                   
-                                    recentJobs.map(job => (
-                                        <JobCard 
-                                            key={job.id}
-                                            title={job.title} 
-                                            company={job.company} 
-                                            location={job.location} 
-                                            employmentType={job.job_type} 
-                                            match={job.relevance_score}
-                                            datePosted={job.date_posted}
-                                        />
-                                    ))
-                                )
-                            )
-                            
-                        )
-                    }
-                </div>
- 
-            </section>
+            
+
+            
         </section>
     )
 }
