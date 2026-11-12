@@ -26,11 +26,11 @@ def job_list(request):
         else:
             relevance_score = None
 
-        all_jobs.append({"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type, "relevance_score": relevance_score})
+        all_jobs.append({"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type, "relevance_score": relevance_score, "date_posted": job.date_posted.isoformat() if job.date_posted else None})
 
     return JsonResponse(data=all_jobs, safe=False)
 
 
 def job_detail(request, job_id):
     job = get_object_or_404(Job,id=job_id)
-    return JsonResponse(data={"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type})
+    return JsonResponse(data={"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type, "date_posted": job.date_posted.isoformat() if job.date_posted else None})
