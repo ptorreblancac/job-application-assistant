@@ -74,6 +74,7 @@ export default function Dashboard() {
                                             employmentType={job.job_type} 
                                             match={job.relevance_score}
                                             datePosted={job.date_posted}
+                                            postingLink={job.posting_link}
                                         />
                                     ))}
                                 </div>
@@ -90,6 +91,7 @@ export default function Dashboard() {
                                             employmentType={job.job_type} 
                                             match={job.relevance_score}
                                             datePosted={job.date_posted}
+                                            postingLink={job.posting_link}
                                         />
                                     ))}
                                 </div>
