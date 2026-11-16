@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Job, ProfileJobMatch
+from .models import Job, ProfileJobMatch, SearchProfile
 
 def job_list(request): 
     job_type = request.GET.get("job_type")
@@ -34,3 +34,7 @@ def job_list(request):
 def job_detail(request, job_id):
     job = get_object_or_404(Job,id=job_id)
     return JsonResponse(data={"id": job.id, "title": job.title, "company": job.company, "location": job.location, "job_type": job.job_type, "posting_link": job.posting_link, "date_posted": job.date_posted.isoformat() if job.date_posted else None})
+
+def profile_detail(request, profile_id):
+    profile = get_object_or_404(SearchProfile, id=profile_id)
+    return JsonResponse(data={"id":profile.id, "target_role": profile.target_role, "location": profile.location, "seniority": profile.seniority, "work_arrangements": profile.work_arrangements, "preferred_skills": profile.preferred_skills})
