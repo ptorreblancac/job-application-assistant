@@ -1,6 +1,9 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from .models import Job, ProfileJobMatch, SearchProfile
+import json
 
 def job_list(request): 
     job_type = request.GET.get("job_type")
@@ -37,4 +40,19 @@ def job_detail(request, job_id):
 
 def profile_detail(request, profile_id):
     profile = get_object_or_404(SearchProfile, id=profile_id)
+    return JsonResponse(data={"id":profile.id, "target_role": profile.target_role, "location": profile.location, "seniority": profile.seniority, "work_arrangements": profile.work_arrangements, "preferred_skills": profile.preferred_skills})
+
+@csrf_exempt
+@require_http_methods(["PUT"])
+def profile_update(request, profile_id):
+    profile = get_object_or_404(SearchProfile, id=profile_id)
+    data = json.loads(request.body)
+
+    profile.target_role = data["target_role"]
+    profile.location = data["location"]
+    profile.seniority = data["seniority"]
+    profile.work_arrangements = data["work_arrangements"]
+    profile.preferred_skills = data["preferred_skills"]    
+
+    profile.save()
     return JsonResponse(data={"id":profile.id, "target_role": profile.target_role, "location": profile.location, "seniority": profile.seniority, "work_arrangements": profile.work_arrangements, "preferred_skills": profile.preferred_skills})
