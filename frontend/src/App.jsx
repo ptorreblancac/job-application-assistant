@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Dashboard from './components/Dashboard'
 import { useState } from 'react'
 import JobSearch from './components/JobSearch'
-import Profile from ".components/Profile"
+import Profile from "./components/Profile"
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard")

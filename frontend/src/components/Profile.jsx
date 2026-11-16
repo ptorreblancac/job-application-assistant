@@ -1,11 +1,15 @@
 import {useState, useEffect} from "react"
 
 const url = "http://127.0.0.1:8000/jobs/profiles/1/"
+const updateUrl = "http://127.0.0.1:8000/jobs/profiles/1/update/"
 
 export default function Profile() {
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [loadError, setLoadError] = useState(null)
+    const [saveError, setSaveError] = useState(null)
+    const [skillsInput, setSkillsInput] = useState("")
+    const [saveMessage, setSaveMessage] = useState("")
 
     useEffect(() => {
         fetch(url)
@@ -17,26 +21,137 @@ export default function Profile() {
             })
             .then((data) => {
                 setProfile(data)
+                setSkillsInput(data.preferred_skills.join(", "))
             })
             .catch((error) => {
-                setError(error.message)
+                setLoadError(error.message)
             })
             .finally(() => {
                 setLoading(false)
             })
     }, [])
 
+    const handleSave = () => {
+        setSaveError(null)
+        setSaveMessage("")
+
+        const updatedProfile = {
+            ...profile,
+            preferred_skills: skillsInput.split(",").map(skill => skill.trim())        
+        }
+
+        fetch(updateUrl, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatedProfile)
+        })
+        .then(async (response) => {
+            const data = await response.text()
+
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${data}`)
+            }
+
+            return JSON.parse(data)
+        })
+        .then(() => {
+            setSaveMessage("Profile saved successfully!")
+        })
+        .catch((error) => {
+            setSaveError(error.message)
+        })
+    }
+
     return(
         <div>
         {loading ? (
             <p>Loading...</p>
-        ) : error ? (
-            <p>{error}</p>
+        ) : loadError ? (
+            <p>{loadError}</p>
         ) : (
             <div>
-                <p>{profile.target_role}</p>
-                <p>{profile.location}</p>
-                <p>{profile.seniority}</p>
+                <input 
+                    value={profile.target_role}
+                    onChange={(event) => {
+                        setProfile({...profile, target_role: event.target.value})
+                    }}
+                />
+                <input 
+                    value={profile.location}
+                    onChange={(event) => {
+                        setProfile({...profile, location: event.target.value})
+                    }}
+                />
+                <select 
+                    value={profile.seniority}
+                    onChange={(event) => {
+                        setProfile({...profile, seniority: event.target.value})
+                    }}
+                >
+                    <option value="Graduate">Graduate</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Mid-level">Mid-level</option>
+                    <option value="Senior">Senior</option>
+                </select>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={profile.work_arrangements.includes("Remote")}
+                        onChange={(event) => {
+                            const updatedWorkArrangements = event.target.checked
+                                ? [...profile.work_arrangements, "Remote"]
+                                : profile.work_arrangements.filter(
+                                    (arrangement) => arrangement !== "Remote"
+                                )
+
+                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                        }}
+                    />
+                    Remote
+                </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={profile.work_arrangements.includes("Hybrid")}
+                        onChange={(event) => {
+                            const updatedWorkArrangements = event.target.checked
+                                ? [...profile.work_arrangements, "Hybrid"]
+                                : profile.work_arrangements.filter(
+                                    (arrangement) => arrangement !== "Hybrid"
+                                )
+
+                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                        }}
+                    />
+                    Hybrid
+                </label>
+                <label>
+                   <input
+                        type="checkbox"
+                        checked={profile.work_arrangements.includes("On-site")}
+                        onChange={(event) => {
+                            const updatedWorkArrangements = event.target.checked
+                                ? [...profile.work_arrangements, "On-site"]
+                                : profile.work_arrangements.filter(
+                                    (arrangement) => arrangement !== "On-site"
+                                )
+
+                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                        }}
+                    /> 
+                    On-site
+                </label>
+                <input 
+                    value={skillsInput}
+                    onChange={(event) => setSkillsInput(event.target.value)}
+                />
+                <button onClick={handleSave}>
+                    Save changes
+                </button>
+                {saveMessage && <p>{saveMessage}</p>}
+                {saveError && <p>{saveError}</p>}
             </div>
         )    
         }
