@@ -172,3 +172,88 @@
     width: 200px;
   }
 }
+
+.profile-content {
+  padding: 32px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-content section {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.profile-content section h3 {
+  color: #252a30;
+  font-size: 17px;
+  margin: 0 0 20px;
+}
+
+.profile-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.profile-content input:not([type="checkbox"]),
+.profile-content select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #252a30;
+  box-sizing: border-box;
+}
+
+.profile-content .work-preferences label {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-right: 24px;
+  cursor: pointer;
+}
+
+.profile-content input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.profile-content button {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.profile-content button:hover {
+  background-color: #1d4ed8;
+}
+
+.save-message {
+  color: #15803d;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.save-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin-top: 12px;
+}

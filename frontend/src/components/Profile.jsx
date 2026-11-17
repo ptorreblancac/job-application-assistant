@@ -37,7 +37,7 @@ export default function Profile() {
 
         const updatedProfile = {
             ...profile,
-            preferred_skills: skillsInput.split(",").map(skill => skill.trim())        
+            preferred_skills: skillsInput.split(",").map(skill => skill.trim()).filter((skill) => skill !== "")       
         }
 
         fetch(updateUrl, {
@@ -71,87 +71,110 @@ export default function Profile() {
         ) : loadError ? (
             <p>{loadError}</p>
         ) : (
-            <div>
-                <input 
-                    value={profile.target_role}
-                    onChange={(event) => {
-                        setProfile({...profile, target_role: event.target.value})
-                    }}
-                />
-                <input 
-                    value={profile.location}
-                    onChange={(event) => {
-                        setProfile({...profile, location: event.target.value})
-                    }}
-                />
-                <select 
-                    value={profile.seniority}
-                    onChange={(event) => {
-                        setProfile({...profile, seniority: event.target.value})
-                    }}
-                >
-                    <option value="Graduate">Graduate</option>
-                    <option value="Junior">Junior</option>
-                    <option value="Mid-level">Mid-level</option>
-                    <option value="Senior">Senior</option>
-                </select>
-                <label>
+            <div className="profile-content">
+                <section className="basic-info">
+                    <h3>Basic information</h3>
+                    <label>Target role
+                        <input 
+                            value={profile.target_role}
+                            onChange={(event) => {
+                                setProfile({...profile, target_role: event.target.value})
+                            }}
+                        />
+                    </label>
+                    <label>
+                        Location
+                        <input 
+                            value={profile.location}
+                            onChange={(event) => {
+                                setProfile({...profile, location: event.target.value})
+                            }}
+                        />
+                    </label>
+                    <label>
+                        Seniority
+                        <select 
+                            value={profile.seniority}
+                            onChange={(event) => {
+                                setProfile({...profile, seniority: event.target.value})
+                            }}
+                        >
+                            <option value="Graduate">Graduate</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Mid-level">Mid-level</option>
+                            <option value="Senior">Senior</option>
+                        </select>
+                    </label>
+                </section>
+                <section className="work-preferences">
+                    <h3>Work preferences</h3>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={profile.work_arrangements.includes("Remote")}
+                            onChange={(event) => {
+                                const updatedWorkArrangements = event.target.checked
+                                    ? [...profile.work_arrangements, "Remote"]
+                                    : profile.work_arrangements.filter(
+                                        (arrangement) => arrangement !== "Remote"
+                                    )
+
+                                setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                            }}
+                        />
+                        Remote
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={profile.work_arrangements.includes("Hybrid")}
+                            onChange={(event) => {
+                                const updatedWorkArrangements = event.target.checked
+                                    ? [...profile.work_arrangements, "Hybrid"]
+                                    : profile.work_arrangements.filter(
+                                        (arrangement) => arrangement !== "Hybrid"
+                                    )
+
+                                setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                            }}
+                        />
+                        Hybrid
+                    </label>
+                    <label>
                     <input
-                        type="checkbox"
-                        checked={profile.work_arrangements.includes("Remote")}
-                        onChange={(event) => {
-                            const updatedWorkArrangements = event.target.checked
-                                ? [...profile.work_arrangements, "Remote"]
-                                : profile.work_arrangements.filter(
-                                    (arrangement) => arrangement !== "Remote"
-                                )
+                            type="checkbox"
+                            checked={profile.work_arrangements.includes("On-site")}
+                            onChange={(event) => {
+                                const updatedWorkArrangements = event.target.checked
+                                    ? [...profile.work_arrangements, "On-site"]
+                                    : profile.work_arrangements.filter(
+                                        (arrangement) => arrangement !== "On-site"
+                                    )
 
-                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
-                        }}
-                    />
-                    Remote
-                </label>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={profile.work_arrangements.includes("Hybrid")}
-                        onChange={(event) => {
-                            const updatedWorkArrangements = event.target.checked
-                                ? [...profile.work_arrangements, "Hybrid"]
-                                : profile.work_arrangements.filter(
-                                    (arrangement) => arrangement !== "Hybrid"
-                                )
-
-                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
-                        }}
-                    />
-                    Hybrid
-                </label>
-                <label>
-                   <input
-                        type="checkbox"
-                        checked={profile.work_arrangements.includes("On-site")}
-                        onChange={(event) => {
-                            const updatedWorkArrangements = event.target.checked
-                                ? [...profile.work_arrangements, "On-site"]
-                                : profile.work_arrangements.filter(
-                                    (arrangement) => arrangement !== "On-site"
-                                )
-
-                            setProfile({...profile, work_arrangements: updatedWorkArrangements})
-                        }}
-                    /> 
-                    On-site
-                </label>
-                <input 
-                    value={skillsInput}
-                    onChange={(event) => setSkillsInput(event.target.value)}
-                />
+                                setProfile({...profile, work_arrangements: updatedWorkArrangements})
+                            }}
+                        /> 
+                        On-site
+                    </label>
+                </section>
+                <section className="skills">
+                    <h3>Skills</h3>
+                    <label>
+                        Preferred skills
+                        <input 
+                            value={skillsInput}
+                            placeholder="e.g. Python, React, Django, SQL"
+                            onChange={(event) => setSkillsInput(event.target.value.filter)}
+                        />
+                    </label>
+                </section>
+                
+                
                 <button onClick={handleSave}>
                     Save changes
                 </button>
-                {saveMessage && <p>{saveMessage}</p>}
-                {saveError && <p>{saveError}</p>}
+                {saveMessage && <p className="save-message">{saveMessage}</p>}
+                {saveError && <p className="save-error">{saveError}</p>}
             </div>
         )    
         }
