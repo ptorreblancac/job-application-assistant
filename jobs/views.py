@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from .models import Job, ProfileJobMatch, SearchProfile
+from .services import recalculate_profile_matches
 import json
 
 def job_list(request): 
@@ -55,4 +56,5 @@ def profile_update(request, profile_id):
     profile.preferred_skills = data["preferred_skills"]    
 
     profile.save()
+    recalculate_profile_matches(profile)
     return JsonResponse(data={"id":profile.id, "target_role": profile.target_role, "location": profile.location, "seniority": profile.seniority, "work_arrangements": profile.work_arrangements, "preferred_skills": profile.preferred_skills})

@@ -85,3 +85,10 @@ def transform_job(job):
         "pay": ""
     }
     return result
+
+def recalculate_profile_matches(profile):
+    profiles = ProfileJobMatch.objects.filter(search_profile=profile)
+    for prof in profiles:
+        similarity = calculate_similarity(prof.job.title, prof.search_profile.target_role)
+        prof.relevance_score = round(predict_relevance(similarity))
+        prof.save()
