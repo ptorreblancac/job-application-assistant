@@ -65,6 +65,14 @@ def score_seniority(job, profile_seniority):
             return 15
     return 0
 
+def score_location(job, profile_location):
+    if not job.location or not profile_location:
+        return 0 
+    elif job.location.strip().lower() == profile_location.strip().lower():
+        return 10
+
+    return 0
+
 #similarity = calculate_similarity(
 #    "Junior Software Engineer",
 #    "Software Engineer"
@@ -77,21 +85,14 @@ def score_seniority(job, profile_seniority):
 
 from types import SimpleNamespace
 
-test_job = SimpleNamespace(
-    description="We are looking for a developer with Python and Django experience.",
-    requirements="Knowledge of SQL and database management.",
-    qualifications="Previous experience with React is desirable."
-)
+job1 = SimpleNamespace(location="Barcelona")
+job2 = SimpleNamespace(location="Madrid")
+job3 = SimpleNamespace(location="")
+job4 = SimpleNamespace(location=" barcelona ")
 
-preferred_skills = ["Java", "AWS", "Docker", "Node.js"]
-
-score = score_skills(test_job, preferred_skills)
-
-print("Actual score:", score)
-
-print(detect_seniority("Junior Software Engineer"))
-print(detect_seniority("Graduate Developer"))
-print(detect_seniority("Software Engineer Intern"))
-print(detect_seniority("Senior Backend Developer"))
-print(detect_seniority("Lead Software Engineer"))
-print(detect_seniority("Software Engineer"))
+print(score_location(job1, "Barcelona"))  # Expected: 10
+print(score_location(job2, "Barcelona"))  # Expected: 0
+print(score_location(job1, "barcelona"))  # Expected: 10
+print(score_location(job3, "Barcelona"))  # Expected: 0
+print(score_location(job1, ""))           # Expected: 0
+print(score_location(job4, "Barcelona"))  # Expected: 10

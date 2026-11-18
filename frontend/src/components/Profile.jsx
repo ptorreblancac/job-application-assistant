@@ -92,6 +92,15 @@ export default function Profile() {
                         />
                     </label>
                     <label>
+                        Country
+                        <input 
+                            value={profile.country}
+                            onChange={(event) => {
+                                setProfile({...profile, country: event.target.value})
+                            }}
+                        />
+                    </label>
+                    <label>
                         Seniority
                         <select 
                             value={profile.seniority}

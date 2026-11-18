@@ -24,6 +24,8 @@ def fetch_adzuna_jobs(profile):
     response = requests.get(url, params=params)
     response.raise_for_status()
     data = response.json()
+
+    print(data["results"][0]["location"])
     return data.get("results", [])
 
 def import_adzuna_jobs(profile):
@@ -74,6 +76,7 @@ def transform_job(job):
         "title": job["title"],
         "company": job["company"]["display_name"],
         "location": job["location"]["display_name"],
+        "country": job["location"]["area"][0],
         "description": job["description"],
         "posting_link": job["redirect_url"],
         "date_posted": datetime.fromisoformat(

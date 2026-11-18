@@ -5,6 +5,7 @@ class Job(models.Model):
     title = models.CharField(max_length=200)
     company = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
+    country = models.CharField(max_length=200)
     pay = models.CharField(max_length=200, blank=True)
     job_type = models.CharField(max_length=50, blank=True)
     description = models.TextField()
@@ -20,6 +21,7 @@ class Job(models.Model):
 class SearchProfile(models.Model):
     target_role = models.CharField(max_length=200)
     location = models.CharField(max_length=200, blank=True)
+    country = models.CharField(max_length=200, blank=True)
     seniority = models.CharField(max_length=200, blank=True)
     work_arrangements = models.JSONField(default=list, blank=True)
     preferred_skills = models.JSONField(default=list, blank=True)
