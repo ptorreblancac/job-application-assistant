@@ -73,6 +73,20 @@ def score_location(job, profile_location):
 
     return 0
 
+def score_work_arrangement(job, preferred_arrangements):
+    if not preferred_arrangements:
+        return 0
+
+    job_text = (job.description + " " + job.requirements + " " + job.qualifications).lower()
+
+    for arrang in preferred_arrangements:
+        if arrang.lower() in job_text:
+            return 10
+
+    return 0
+
+    
+
 #similarity = calculate_similarity(
 #    "Junior Software Engineer",
 #    "Software Engineer"
@@ -84,15 +98,46 @@ def score_location(job, profile_location):
 #print("Predicted relevance:", score)
 
 from types import SimpleNamespace
+from jobs.matching import score_work_arrangement
 
-job1 = SimpleNamespace(location="Barcelona")
-job2 = SimpleNamespace(location="Madrid")
-job3 = SimpleNamespace(location="")
-job4 = SimpleNamespace(location=" barcelona ")
+job1 = SimpleNamespace(
+    description="We offer remote work opportunities.",
+    requirements="Python experience required.",
+    qualifications=""
+)
 
-print(score_location(job1, "Barcelona"))  # Expected: 10
-print(score_location(job2, "Barcelona"))  # Expected: 0
-print(score_location(job1, "barcelona"))  # Expected: 10
-print(score_location(job3, "Barcelona"))  # Expected: 0
-print(score_location(job1, ""))           # Expected: 0
-print(score_location(job4, "Barcelona"))  # Expected: 10
+job2 = SimpleNamespace(
+    description="This is a hybrid position.",
+    requirements="",
+    qualifications=""
+)
+
+job3 = SimpleNamespace(
+    description="Work from our Barcelona office.",
+    requirements="",
+    qualifications=""
+)
+
+job4 = SimpleNamespace(
+    description="REMOTE position available.",
+    requirements="",
+    qualifications=""
+)
+
+# 1. Remote preference matches
+print(score_work_arrangement(job1, ["Remote"]))  # 10
+
+# 2. Hybrid preference matches
+print(score_work_arrangement(job2, ["Hybrid"]))  # 10
+
+# 3. No matching arrangement
+print(score_work_arrangement(job3, ["Remote"]))  # 0
+
+# 4. Case-insensitive matching
+print(score_work_arrangement(job4, ["Remote"]))  # 10
+
+# 5. Multiple preferences, one matches
+print(score_work_arrangement(job2, ["Remote", "Hybrid"]))  # 10
+
+# 6. Empty preferences
+print(score_work_arrangement(job1, []))  # 0

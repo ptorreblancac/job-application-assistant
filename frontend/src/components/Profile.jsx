@@ -173,7 +173,7 @@ export default function Profile() {
                         <input 
                             value={skillsInput}
                             placeholder="e.g. Python, React, Django, SQL"
-                            onChange={(event) => setSkillsInput(event.target.value.filter)}
+                            onChange={(event) => setSkillsInput(event.target.value)}
                         />
                     </label>
                 </section>
