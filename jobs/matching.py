@@ -11,8 +11,8 @@ def calculate_similarity(job_title,target_role):
 
 
 def predict_relevance(similarity):
-    prediction = -3.7103 + (9.1598 * similarity)
-    prediction = max(0, min(5,prediction))
+    prediction = (-3.7103 + (9.1598 * similarity))*6
+    prediction = max(0, min(30,prediction))
     return prediction
 
 def score_role_relevance(job_title, target_roles):
