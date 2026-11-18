@@ -43,8 +43,6 @@ def score_skills(job, preferred_skills):
 
     return (matching_skills/len(preferred_skills))*30
 
-
-
 def detect_seniority(text):
     for category, keywords in SENIORITY_CATEGORIES.items():
         for keyword in keywords:
@@ -53,7 +51,19 @@ def detect_seniority(text):
 
     return None
 
+def score_seniority(job, profile_seniority):
+    fields = []
+    fields.append(job.title)
+    fields.append(job.description)
+    fields.append(job.requirements)
 
+    for field in fields:
+        seniority = detect_seniority(field)
+        if (seniority is not None and seniority != profile_seniority):
+            return 0
+        elif (seniority == profile_seniority):
+            return 15
+    return 0
 
 #similarity = calculate_similarity(
 #    "Junior Software Engineer",
