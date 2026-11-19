@@ -25,7 +25,8 @@ def fetch_adzuna_jobs(profile):
     response.raise_for_status()
     data = response.json()
 
-    print(data["results"][0]["location"])
+    print(data["results"][0].get("contract_time"))
+    print(data["results"][0].get("contract_type"))
     return data.get("results", [])
 
 def import_adzuna_jobs(profile):

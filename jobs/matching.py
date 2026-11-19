@@ -41,7 +41,7 @@ def score_skills(job, preferred_skills):
         if skill.lower() in job_text.lower():
             matching_skills += 1
 
-    return (matching_skills/len(preferred_skills))*30
+    return (matching_skills/len(preferred_skills))*35
 
 def detect_seniority(text):
     for category, keywords in SENIORITY_CATEGORIES.items():
@@ -85,7 +85,16 @@ def score_work_arrangement(job, preferred_arrangements):
 
     return 0
 
-    
+def calculate_job_match(job,profile):  
+    points = (
+        score_role_relevance(job.title,profile.target_role) 
+        + score_skills(job,profile.preferred_skills) 
+        + score_seniority(job,profile.seniority) 
+        + score_location(job,profile.location) 
+        + score_work_arrangement(job,profile.work_arrangements)
+    )
+
+    return points
 
 #similarity = calculate_similarity(
 #    "Junior Software Engineer",
@@ -96,48 +105,3 @@ def score_work_arrangement(job, preferred_arrangements):
 
 #print("Similarity:", similarity)
 #print("Predicted relevance:", score)
-
-from types import SimpleNamespace
-from jobs.matching import score_work_arrangement
-
-job1 = SimpleNamespace(
-    description="We offer remote work opportunities.",
-    requirements="Python experience required.",
-    qualifications=""
-)
-
-job2 = SimpleNamespace(
-    description="This is a hybrid position.",
-    requirements="",
-    qualifications=""
-)
-
-job3 = SimpleNamespace(
-    description="Work from our Barcelona office.",
-    requirements="",
-    qualifications=""
-)
-
-job4 = SimpleNamespace(
-    description="REMOTE position available.",
-    requirements="",
-    qualifications=""
-)
-
-# 1. Remote preference matches
-print(score_work_arrangement(job1, ["Remote"]))  # 10
-
-# 2. Hybrid preference matches
-print(score_work_arrangement(job2, ["Hybrid"]))  # 10
-
-# 3. No matching arrangement
-print(score_work_arrangement(job3, ["Remote"]))  # 0
-
-# 4. Case-insensitive matching
-print(score_work_arrangement(job4, ["Remote"]))  # 10
-
-# 5. Multiple preferences, one matches
-print(score_work_arrangement(job2, ["Remote", "Hybrid"]))  # 10
-
-# 6. Empty preferences
-print(score_work_arrangement(job1, []))  # 0
