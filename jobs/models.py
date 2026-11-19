@@ -57,7 +57,7 @@ class ProfileJobMatch(models.Model):
     relevance_score = models.IntegerField(
         validators=[
             MinValueValidator(0),
-            MaxValueValidator(5)
+            MaxValueValidator(100)
         ]
     )
     matched_at = models.DateTimeField(auto_now_add=True)

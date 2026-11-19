@@ -3,7 +3,7 @@ from .models import Job, ProfileJobMatch
 from dotenv import load_dotenv
 import requests
 import os
-from .matching import calculate_similarity, predict_relevance
+from .matching import calculate_job_match
 
 def fetch_adzuna_jobs(profile):
     load_dotenv()
@@ -38,14 +38,7 @@ def import_adzuna_jobs(profile):
         transformed_job = transform_job(job)
         job_object, created = save_job(transformed_job)
 
-        similarity = calculate_similarity(
-            job_object.title,
-            profile.target_role
-        )
-
-        score = predict_relevance(similarity)
-
-        score = round(score)
+        score = round(calculate_job_match(job_object, profile))
 
         ProfileJobMatch.objects.update_or_create(
             search_profile=profile,
@@ -93,6 +86,5 @@ def transform_job(job):
 def recalculate_profile_matches(profile):
     profiles = ProfileJobMatch.objects.filter(search_profile=profile)
     for prof in profiles:
-        similarity = calculate_similarity(prof.job.title, prof.search_profile.target_role)
-        prof.relevance_score = round(predict_relevance(similarity))
+        prof.relevance_score = round(calculate_job_match(prof.job,profile))
         prof.save()
