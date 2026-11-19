@@ -24,11 +24,8 @@ def predict_relevance(similarity):
     return prediction
 
 def score_role_relevance(job_title, target_roles):
-    for role in target_roles:
-        if role.lower() in job_title.lower():
-            return 25
-    
-    return 0
+    similarity = calculate_similarity(job_title,target_roles)
+    return predict_relevance(similarity)
 
 def score_skills(job, preferred_skills):
     if not preferred_skills: 
