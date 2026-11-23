@@ -173,6 +173,12 @@
   }
 }
 
+@media (max-width: 900px) {
+  .job-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 .profile-content {
   padding: 32px;
   width: 100%;
@@ -256,4 +262,10 @@
   color: #dc2626;
   font-size: 14px;
   margin-top: 12px;
+}
+
+.jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }

@@ -9,22 +9,9 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    const sortedJobs = jobs.slice().sort((a,b) => {
-            if (a.relevance_score === null && b.relevance_score === null) return 0
-            if (a.relevance_score === null) return 1
-            if (b.relevance_score === null) return -1
+    const sortedJobs = jobs.slice().filter(job => job.relevance_score != null).sort((a,b) => b.relevance_score - a.relevance_score).slice(0,5)
 
-            return b.relevance_score - a.relevance_score
-        }
-    ).slice(0,5)
-
-    const recentJobs = jobs.slice().sort((a,b) => {
-        if (a.date_posted === null && b.date_posted === null) return 0
-        if (a.date_posted === null) return 1 //if positive, returns b first
-        if (b.date_posted === null) return -1 //if negative, returns a first
-
-        return new Date(b.date_posted) - new Date(a.date_posted)
-    }).slice(0,5)
+    const recentJobs = jobs.slice().filter(job => job.date_posted != null).sort((a,b) => new Date(b.date_posted) - new Date(a.date_posted)).slice(0,5)
 
     useEffect(() => {
         fetch(url)
@@ -46,12 +33,22 @@ export default function Dashboard() {
 
     }, []); //runs only on the first render
 
+    const validScore = jobs.filter(job => job.relevance_score != null)
+    const sumScores = validScore.reduce((accumulator, currentItem) => {
+        return accumulator + currentItem.relevance_score
+    }, 0)
+
+    const averageMatchScore = (validScore.length == 0)? "N/A" : (sumScores/validScore.length).toFixed(1)
+
+    const listScores = validScore.map(score => score.relevance_score)
+    const highestMatchScore = (validScore.length == 0)? "N/A" : Math.max(...listScores)
+
     return(
         <section className="dashboard-content">
             <div className="stats-container">
                 <StatCard title="Jobs found" value={jobs.length} />
-                <StatCard title="Saved jobs" value={8} />
-                <StatCard title="Applications" value={3} />
+                <StatCard title="Average Match Score" value={averageMatchScore} />
+                <StatCard title="Highest Match Score" value={highestMatchScore} />
             </div>
             <div>
                 {loading ? (
