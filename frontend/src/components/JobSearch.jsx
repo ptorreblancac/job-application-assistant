@@ -10,6 +10,7 @@ export default function JobSearch() {
     const [selectedCompany, setSelectedCompany] = useState("")
     const [selectedLocation, setSelectedLocation] = useState("")
     const [selectedEmploymentType, setSelectedEmploymentType] = useState("")
+    const [searchTerm, setSearchTerm] = useState("")
 
     const sortedJobs = [...jobs].sort((a, b) => {
         if (a.relevance_score === null && b.relevance_score === null) return 0
@@ -19,17 +20,22 @@ export default function JobSearch() {
         return b.relevance_score - a.relevance_score
     })
 
-    const companies = [...new Set(jobs.map(job => (job.company)))]
-    const locations = [...new Set(jobs.map(job => (job.location)))]
-    const employmentTypes = [...new Set(jobs.map(job => (job.job_type)))]
+    const companies = [...new Set(jobs.filter(job => job.company).map(job => (job.company)))]
+    const locations = [...new Set(jobs.filter(job => job.location).map(job => (job.location)))]
+    const employmentTypes = [...new Set(jobs.filter(job => job.job_type).map(job => (job.job_type)))]
+
+    const normalizedSearch = searchTerm.toLowerCase()
 
     const filteredJobs = sortedJobs.filter(job => {
         const matchesCompany = selectedCompany === "" || job.company === selectedCompany
         const matchesLocation = selectedLocation === "" || job.location === selectedLocation
         const matchesEmploymentType = selectedEmploymentType === "" || job.job_type === selectedEmploymentType
+        
+        const matchesSearch = searchTerm === "" || (job.title || "").toLowerCase().includes(normalizedSearch) || (job.description || "").toLowerCase().includes(normalizedSearch) || (job.company || "").toLowerCase().includes(normalizedSearch)
 
-        return matchesCompany && matchesLocation && matchesEmploymentType
+        return matchesCompany && matchesLocation && matchesEmploymentType && matchesSearch
     })
+
 
     useEffect(() => {
         fetch(url)
@@ -54,6 +60,15 @@ export default function JobSearch() {
         <section className="job-search">
             <header>Job Search</header>
             <p>Explore and discover opportunities matching your profile.</p>
+            <label>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search jobs by title, company or keyword..."
+                />
+                Search jobs:
+            </label>
             <select
                 value={selectedCompany}
                 onChange={(event) => setSelectedCompany(event.target.value)}
@@ -84,6 +99,16 @@ export default function JobSearch() {
                     <option key={employmentType} value={employmentType}>{employmentType}</option>
                 ))}
             </select>
+            <button
+                onClick={() => {
+                    setSelectedCompany("")
+                    setSearchTerm("")
+                    setSelectedEmploymentType("")
+                    setSelectedLocation("")
+                }}
+            >
+                Clear filters
+            </button>
                 { loading ? (
                     <p>Loading jobs...</p>
                 ) : error ? (
