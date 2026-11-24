@@ -20,8 +20,14 @@ export default function Profile() {
                 return response.json()
             })
             .then((data) => {
-                setProfile(data)
-                setSkillsInput(data.preferred_skills.join(", "))
+                const loadedProfile = {
+                    ...data,
+                    preferred_skills: data.preferred_skills ?? [],
+                    work_arrangements: data.work_arrangements ?? []
+                }
+
+                setProfile(loadedProfile)
+                setSkillsInput(loadedProfile.preferred_skills.join(", "))
             })
             .catch((error) => {
                 setLoadError(error.message)
