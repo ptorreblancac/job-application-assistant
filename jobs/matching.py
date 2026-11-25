@@ -1,4 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
+import re
 
 model = SentenceTransformer("BAAI/bge-small-en-v1.5")
 
@@ -10,12 +11,26 @@ SENIORITY_CATEGORIES = {
     "Lead/Principal": ["Lead", "Principal", "Staff"]
 }
 
-def calculate_similarity(job_title,target_role):
-    job_title = model.encode(job_title)
-    target_role = model.encode(target_role)
+def remove_seniority(job):
+    for category, keywords in SENIORITY_CATEGORIES.items():
+        for keyword in keywords:
+            job = re.sub(r"\b" + keyword + r"\b", "", job, flags=re.IGNORECASE)                
 
-    similarity = util.cos_sim(job_title, target_role).item()
-    return similarity
+    return job.strip()
+
+def calculate_similarity(job_title,target_roles):
+    if isinstance(target_roles, str):
+        target_roles = [target_roles]
+
+    job_title = model.encode(job_title)
+    max_similarity = 0
+
+    for role in target_roles:
+        target_role = model.encode(role)
+        similarity = util.cos_sim(job_title, target_role).item()
+        max_similarity = max(similarity,max_similarity)
+
+    return max_similarity
 
 
 def predict_relevance(similarity):
@@ -24,7 +39,8 @@ def predict_relevance(similarity):
     return prediction
 
 def score_role_relevance(job_title, target_roles):
-    similarity = calculate_similarity(job_title,target_roles)
+    job = remove_seniority(job_title)
+    similarity = calculate_similarity(job,target_roles)
     return predict_relevance(similarity)
 
 def score_skills(job, preferred_skills):
