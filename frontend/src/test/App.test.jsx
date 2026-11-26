@@ -42,7 +42,7 @@ const mockJobs = [
 describe('App', () => {
 
     beforeEach(() => {
-        vi.stubGlobal('fetch', vi.fn((url, options = {}) => {
+        vi.stubGlobal('fetch', vi.fn((url) => {
 
             if (url === 'http://127.0.0.1:8000/jobs/') {
                 return Promise.resolve({

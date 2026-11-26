@@ -24,7 +24,7 @@ export default function Dashboard() {
             .then(data => {
                 setJobs(data)
             })
-            .catch(error => {
+            .catch(() => {
                 setError("Unable to load jobs. Please try again later.")
             })
             .finally(() => {
