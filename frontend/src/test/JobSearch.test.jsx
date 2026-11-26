@@ -1,5 +1,5 @@
 
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import JobSearch from '../components/JobSearch'
@@ -142,7 +142,7 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        await user.selectOptions(screen.getAllByRole('combobox')[0], 'Amazon')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Company' }), 'Amazon')
 
         expect(screen.getByText('Frontend Developer')).toBeInTheDocument()
         expect(screen.queryByText('Junior Software Engineer')).not.toBeInTheDocument()
@@ -155,7 +155,7 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        await user.selectOptions(screen.getAllByRole('combobox')[1], 'Barcelona')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Barcelona')
 
         expect(screen.getByText('Junior Software Engineer')).toBeInTheDocument()
         expect(screen.queryByText('Frontend Developer')).not.toBeInTheDocument()
@@ -168,7 +168,7 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        await user.selectOptions(screen.getAllByRole('combobox')[2], 'Part-time')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Employment type' }), 'Part-time')
 
         expect(screen.getByText('Frontend Developer')).toBeInTheDocument()
         expect(screen.queryByText('Junior Software Engineer')).not.toBeInTheDocument()
@@ -245,10 +245,15 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        const filters = screen.getAllByRole('combobox')
+        await user.selectOptions(
+            screen.getByRole('combobox', { name: 'Company' }),
+            'Google'
+        )
 
-        await user.selectOptions(filters[0], 'Google')
-        await user.selectOptions(filters[1], 'Madrid')
+        await user.selectOptions(
+            screen.getByRole('combobox', { name: 'Location' }),
+            'Madrid'
+        )
 
         expect(screen.getByText('Backend Developer')).toBeInTheDocument()
         expect(screen.queryByText('Junior Software Engineer')).not.toBeInTheDocument()
@@ -259,8 +264,8 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        await user.selectOptions(screen.getAllByRole('combobox')[0], 'Amazon')
-        await user.selectOptions(screen.getAllByRole('combobox')[1], 'Barcelona')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Company' }), 'Amazon')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Barcelona')
 
         expect(screen.getByText('No jobs match your filters')).toBeInTheDocument()
     })
@@ -271,8 +276,8 @@ describe('JobSearch', () => {
         const user = userEvent.setup()
         await renderLoadedJobs()
 
-        await user.selectOptions(screen.getAllByRole('combobox')[0], 'Amazon')
-        await user.selectOptions(screen.getAllByRole('combobox')[1], 'Madrid')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Company' }), 'Amazon')
+        await user.selectOptions(screen.getByRole('combobox', { name: 'Location' }), 'Madrid')
 
         await user.type(
             screen.getByPlaceholderText(

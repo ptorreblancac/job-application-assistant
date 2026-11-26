@@ -69,36 +69,46 @@ export default function JobSearch() {
                 />
                 Search jobs:
             </label>
-            <select
-                value={selectedCompany}
-                onChange={(event) => setSelectedCompany(event.target.value)}
-            >
-                <option value="">All companies</option>
+            <label>
+                Company
+               <select
+                    value={selectedCompany}
+                    onChange={(event) => setSelectedCompany(event.target.value)}
+                >
+                    <option value="">All companies</option>
 
-                {companies.map(company => (
-                    <option key={company} value={company}>{company}</option>
-                ))}
-            </select>
-            <select
-                value={selectedLocation}
-                onChange={(event) => setSelectedLocation(event.target.value)}
-            >
-                <option value="">All locations</option>
+                    {companies.map(company => (
+                        <option key={company} value={company}>{company}</option>
+                    ))}
+                </select> 
+            </label>
+            <label>
+                Location
+                <select
+                    value={selectedLocation}
+                    onChange={(event) => setSelectedLocation(event.target.value)}
+                >
+                    <option value="">All locations</option>
 
-                {locations.map(location => (
-                    <option key={location} value={location}>{location}</option>
-                ))}
-            </select>
-            <select
-                value={selectedEmploymentType}
-                onChange={(event) => setSelectedEmploymentType(event.target.value)}
-            >
-                <option value="">All employment types</option>
+                    {locations.map(location => (
+                        <option key={location} value={location}>{location}</option>
+                    ))}
+                </select>
+            </label>
+            <label>
+                Employment type
+               <select
+                    value={selectedEmploymentType}
+                    onChange={(event) => setSelectedEmploymentType(event.target.value)}
+                >
+                    <option value="">All employment types</option>
 
-                {employmentTypes.map(employmentType => (
-                    <option key={employmentType} value={employmentType}>{employmentType}</option>
-                ))}
-            </select>
+                    {employmentTypes.map(employmentType => (
+                        <option key={employmentType} value={employmentType}>{employmentType}</option>
+                    ))}
+                </select> 
+            </label>
+            
             <button
                 onClick={() => {
                     setSelectedCompany("")
