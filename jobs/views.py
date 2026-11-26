@@ -18,12 +18,17 @@ def job_list(request):
     if company is not None:
         jobs = jobs.filter(company=company) 
 
+    profile = SearchProfile.objects.first()   
+
     all_jobs = []
     for job in jobs:
-        match = ProfileJobMatch.objects.filter(
-            search_profile_id=1,
-            job=job
-        ).first()
+        match = None
+
+        if profile: 
+            match = ProfileJobMatch.objects.filter(
+                search_profile_id=profile,
+                job=job
+            ).first()
 
         if match:
             relevance_score = match.relevance_score
@@ -59,3 +64,12 @@ def profile_update(request, profile_id):
     profile.save()
     recalculate_profile_matches(profile)
     return JsonResponse(data={"id":profile.id, "target_role": profile.target_role, "location": profile.location, "country": profile.country, "seniority": profile.seniority, "work_arrangements": profile.work_arrangements, "preferred_skills": profile.preferred_skills})
+
+
+def active_profile(request):
+    profile = SearchProfile.objects.first()
+
+    if not profile:
+        return JsonResponse({"error": "No search profile found"}, status=404)
+
+    return JsonResponse({"id": profile.id})

@@ -51,6 +51,13 @@ describe('App', () => {
                 })
             }
 
+            if (url === 'http://127.0.0.1:8000/jobs/profiles/active/') {
+                return Promise.resolve({
+                    ok: true,
+                    json: async () => ({ id: mockProfile.id })
+                })
+            }
+
             if (url === 'http://127.0.0.1:8000/jobs/profiles/1/') {
                 return Promise.resolve({
                     ok: true,

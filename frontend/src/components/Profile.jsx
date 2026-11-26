@@ -1,8 +1,5 @@
 import {useState, useEffect} from "react"
 
-const url = "http://127.0.0.1:8000/jobs/profiles/1/"
-const updateUrl = "http://127.0.0.1:8000/jobs/profiles/1/update/"
-
 export default function Profile() {
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -10,12 +7,25 @@ export default function Profile() {
     const [saveError, setSaveError] = useState(null)
     const [skillsInput, setSkillsInput] = useState("")
     const [saveMessage, setSaveMessage] = useState("")
+    const [profileId, setProfileId] = useState(null)
 
     useEffect(() => {
-        fetch(url)
+        fetch("http://127.0.0.1:8000/jobs/profiles/active/")
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("Something went wrong")
+                    throw new Error("Could not find an active profile")
+                }
+                return response.json()
+            })
+            .then((data) => {
+                const profileId = data.id
+                setProfileId(profileId)
+
+                return fetch(`http://127.0.0.1:8000/jobs/profiles/${profileId}/`)
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Could not load profile details")
                 }
                 return response.json()
             })
@@ -46,7 +56,7 @@ export default function Profile() {
             preferred_skills: skillsInput.split(",").map(skill => skill.trim()).filter((skill) => skill !== "")       
         }
 
-        fetch(updateUrl, {
+        fetch(`http://127.0.0.1:8000/jobs/profiles/${profileId}/update/`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

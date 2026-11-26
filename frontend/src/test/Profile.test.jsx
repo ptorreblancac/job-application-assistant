@@ -23,10 +23,15 @@ describe('Profile', () => {
     })
 
     const loadProfile = (profile = mockProfile) => {
-        fetch.mockResolvedValueOnce({
-            ok: true,
-            json: async () => profile
-        })
+        fetch
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ id: profile.id })
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => profile
+            })
     }
 
     const renderLoadedProfile = async (profile = mockProfile) => {
@@ -44,10 +49,16 @@ describe('Profile', () => {
         expect(screen.getByText('Loading...')).toBeInTheDocument()
     })
 
-    it('fetches the profile from the correct endpoint', async () => {
+    it('fetches the active profile and then its details', async () => {
         await renderLoadedProfile()
 
-        expect(fetch).toHaveBeenCalledWith(
+        expect(fetch).toHaveBeenNthCalledWith(
+            1,
+            'http://127.0.0.1:8000/jobs/profiles/active/'
+        )
+
+        expect(fetch).toHaveBeenNthCalledWith(
+            2,
             'http://127.0.0.1:8000/jobs/profiles/1/'
         )
     })
@@ -65,8 +76,7 @@ describe('Profile', () => {
 
         render(<Profile />)
 
-        expect(await screen.findByText('Something went wrong')).toBeInTheDocument()
-    })
+        expect(await screen.findByText('Could not find an active profile')).toBeInTheDocument()    })
 
     // Profile rendering
 
