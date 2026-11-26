@@ -4,7 +4,7 @@ export default function Sidebar({ activePage, setActivePage }) {
             <h2>Job Assistant</h2>
             <nav>
                 <a href="placeholder" className={activePage === "dashboard" ? "active" : ""} 
-                onClick={() => {
+                onClick={(event) => {
                     event.preventDefault()
                     setActivePage("dashboard")
                 }}>Dashboard</a>
@@ -14,7 +14,7 @@ export default function Sidebar({ activePage, setActivePage }) {
                         setActivePage("job-search")
                     }}>Job Search</a>
                 <a href="placeholder" className={activePage === "profile" ? "active" : ""} 
-                    onClick={() => {
+                    onClick={(event) => {
                         event.preventDefault()
                         setActivePage("profile")
                         }}>Profile</a>
